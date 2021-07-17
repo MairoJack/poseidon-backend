@@ -27,7 +27,7 @@ const routes = [
     path: "/college",
     component: Layout,
     name: "海神学院",
-    icon: "el-icon-s-shop",
+    icon: "el-icon-school",
     meta: { title: "海神学院" },
     children: [
       {
@@ -43,6 +43,36 @@ const routes = [
         icon: "el-icon-document-add",
         meta: { title: "添加学院" },
         component: () => import("@/views/CollegeAdd.vue"),
+      },
+    ],
+  },
+  {
+    path: "/lecture",
+    component: Layout,
+    name: "活动讲座",
+    icon: "el-icon-monitor",
+    meta: { title: "活动讲座" },
+    children: [
+      {
+        path: "/lecture-list",
+        name: "活动讲座列表",
+        icon: "el-icon-s-data",
+        meta: { title: "活动讲座列表" },
+        component: () => import("@/views/Lecture.vue"),
+      },
+      {
+        path: "/lecture-add",
+        name: "添加活动讲座",
+        icon: "el-icon-document-add",
+        meta: { title: "添加活动讲座" },
+        component: () => import("@/views/LectureDetail.vue"),
+      },
+      {
+        path: "/lecture-edit/:id(\\d+)",
+        name: "编辑活动讲座",
+        meta: { title: "编辑活动讲座" },
+        hidden: true,
+        component: () => import("@/views/LectureDetail.vue"),
       },
     ],
   },

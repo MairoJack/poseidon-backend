@@ -3,7 +3,7 @@
     <el-affix class="aside-logo">
       <div>
         <img src="@/assets/image/whale.png" />
-        <p>Poseidon</p>
+        <p v-if="!isCollapse">Poseidon</p>
       </div>
     </el-affix>
     <el-menu
@@ -25,16 +25,14 @@
             <i :class="menu.icon" />
             <span>{{ menu.name }}</span>
           </template>
-          <el-menu-item
-            v-for="child in menu.children"
-            :key="child"
-            :index="child.path"
-          >
-            <i :class="child.icon" />
-            <template #title>
-              {{ child.name }}
-            </template>
-          </el-menu-item>
+          <template v-for="child in menu.children" :key="child">
+            <el-menu-item :index="child.path" v-if="!child.hidden">
+              <i :class="child.icon" />
+              <template #title>
+                {{ child.name }}
+              </template>
+            </el-menu-item>
+          </template>
         </el-submenu>
       </template>
     </el-menu>

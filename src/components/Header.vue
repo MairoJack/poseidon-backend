@@ -15,8 +15,8 @@
           <el-breadcrumb-item
             v-for="(matched, index) in this.$route.matched"
             :key="index"
-            >{{ matched.meta.title }}</el-breadcrumb-item
-          >
+            >{{ matched.meta.title }}
+          </el-breadcrumb-item>
         </el-breadcrumb>
         <el-breadcrumb separator="/" v-else>
           <el-breadcrumb-item>工作台</el-breadcrumb-item>
@@ -79,7 +79,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scped>
+<style lang="scss">
 .header-collapse {
   cursor: pointer;
 }
