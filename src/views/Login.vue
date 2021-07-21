@@ -3,14 +3,14 @@
     <div class="ms-login">
       <div class="ms-title">Poseidon后台管理系统</div>
       <el-form
-        :model="param"
+        :model="loginForm"
         :rules="rules"
-        ref="login"
+        ref="validateForm"
         label-width="0px"
         class="ms-content"
       >
         <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="username">
+          <el-input v-model="loginForm.username" placeholder="请输入用户名">
             <template #prepend>
               <el-button icon="el-icon-user"></el-button>
             </template>
@@ -19,8 +19,8 @@
         <el-form-item prop="password">
           <el-input
             type="password"
-            placeholder="password"
-            v-model="param.password"
+            placeholder="请输入密码"
+            v-model="loginForm.password"
             @keyup.enter="submitForm()"
           >
             <template #prepend>
@@ -29,26 +29,34 @@
           </el-input>
         </el-form-item>
         <div class="login-btn">
-          <el-button type="primary" @click="submitForm()">登录</el-button>
+          <el-button :loading="loading" type="primary" @click="submitForm()"
+            >登录</el-button
+          >
         </div>
-        <p class="login-tips">Tips : 用户名和密码随便填。</p>
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive } from "vue";
-//import { useStore } from "vuex";
+import { login } from "@/api/index.js";
+import { ref, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 
 export default {
   setup() {
     const router = useRouter();
-    const param = reactive({
-      username: "admin",
-      password: "123123",
+    const store = useStore();
+
+    const validateForm = ref(null);
+    const state = reactive({
+      loading: false,
+      loginForm: {
+        username: "",
+        password: "",
+      },
     });
 
     const rules = {
@@ -61,27 +69,22 @@ export default {
       ],
       password: [{ required: true, message: "请输入密码", trigger: "blur" }],
     };
-    const login = ref(null);
-    const submitForm = () => {
-      login.value.validate((valid) => {
-        if (valid) {
-          ElMessage.success("登录成功");
-          localStorage.setItem("ms_username", param.username);
-          router.push("/");
-        } else {
-          ElMessage.error("登录失败");
-          return false;
-        }
+
+    const submitForm = async () => {
+      await validateForm.value.validate();
+
+      state.login = true;
+      login(state.loginForm).then((res) => {
+        state.login = false;
+        store.commit("SET_TOKEN", res);
+        router.push("/");
       });
     };
 
-    //const store = useStore();
-    //store.commit("clearTags");
-
     return {
-      param,
+      ...toRefs(state),
       rules,
-      login,
+      validateForm,
       submitForm,
     };
   },

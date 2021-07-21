@@ -15,8 +15,8 @@
           <el-breadcrumb-item
             v-for="(matched, index) in this.$route.matched"
             :key="index"
-            >{{ matched.meta.title }}</el-breadcrumb-item
-          >
+            >{{ matched.meta.title }}
+          </el-breadcrumb-item>
         </el-breadcrumb>
         <el-breadcrumb separator="/" v-else>
           <el-breadcrumb-item>工作台</el-breadcrumb-item>
@@ -54,6 +54,7 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import { reactive, toRefs } from "vue";
 export default {
   setup() {
@@ -61,6 +62,7 @@ export default {
       isCollapse: false,
     });
     const store = useStore();
+    const router = useRouter();
 
     state.isCollapse = computed(() => store.state.isCollapse);
     const onCollapse = () => {
@@ -68,7 +70,8 @@ export default {
     };
 
     const logout = () => {
-      console.log("退出登录");
+      store.commit("CLEAR");
+      router.push("/login");
     };
     return {
       ...toRefs(state),
@@ -79,7 +82,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scped>
+<style lang="scss">
 .header-collapse {
   cursor: pointer;
 }
