@@ -2,6 +2,10 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
 import Layout from "@/layout/Layout.vue";
+import { getStore } from "@/utils/storage.js";
+import { getUserInfo } from "@/api/index.js";
+import store1 from "@/store/index.js";
+import { useStore } from "vuex";
 const routes = [
   {
     path: "/",
@@ -93,9 +97,34 @@ const router = createRouter({
 });
 
 NProgress.configure({ showSpinner: false });
+const whiteList = ["/login"];
 router.beforeEach((to, from, next) => {
   NProgress.start();
   document.title = to.meta.title;
+
+  const token = getStore("token");
+  if (token) {
+    const store = useStore();
+    // const name = store1.getters.name;
+    // console.log(store1.getters.name);
+    console.log(store);
+    if (name) {
+      console.log("123");
+      next();
+    } else {
+      getUserInfo().then((res) => {
+        store.commit("SET_NAME", res.username);
+        next({ ...to, replace: true });
+      });
+    }
+  } else {
+    if (whiteList.indexOf(to.path) !== -1) {
+      next();
+    } else {
+      next("/login?redirect=${to.path}");
+      NProgress.done();
+    }
+  }
   next();
 });
 

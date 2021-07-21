@@ -5,13 +5,13 @@ import path from "path";
 export default defineConfig({
   server: {
     host: "0.0.0.0",
-    proxy: {
-      "/api": {
-        target: "http://www.poseidon.com",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
-      },
-    },
+    // proxy: {
+    //   "/api": {
+    //     target: "http://www.poseidon.com",
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, ""),
+    //   },
+    // },
   },
   resolve: {
     alias: {
