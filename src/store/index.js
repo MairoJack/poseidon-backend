@@ -34,8 +34,7 @@ export default createStore({
       }
       return state.token;
     },
-    name(state) {
-      console.log(state.name);
+    getName(state) {
       return state.name;
     },
   },

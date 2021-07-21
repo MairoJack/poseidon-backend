@@ -4,8 +4,7 @@ import "nprogress/nprogress.css";
 import Layout from "@/layout/Layout.vue";
 import { getStore } from "@/utils/storage.js";
 import { getUserInfo } from "@/api/index.js";
-import store1 from "@/store/index.js";
-import { useStore } from "vuex";
+import store from "@/store/index.js";
 const routes = [
   {
     path: "/",
@@ -104,12 +103,8 @@ router.beforeEach((to, from, next) => {
 
   const token = getStore("token");
   if (token) {
-    const store = useStore();
-    // const name = store1.getters.name;
-    // console.log(store1.getters.name);
-    console.log(store);
+    const name = store.getters.getName;
     if (name) {
-      console.log("123");
       next();
     } else {
       getUserInfo().then((res) => {
@@ -121,11 +116,10 @@ router.beforeEach((to, from, next) => {
     if (whiteList.indexOf(to.path) !== -1) {
       next();
     } else {
-      next("/login?redirect=${to.path}");
+      next(`/login?redirect=${to.path}`);
       NProgress.done();
     }
   }
-  next();
 });
 
 router.afterEach(() => {

@@ -32,7 +32,7 @@
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click">
           <span class="el-dropdown-link">
-            超级管理员
+            {{ $store.state.name }}
             <i class="el-icon-caret-bottom"></i>
           </span>
           <template #dropdown>

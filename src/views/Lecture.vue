@@ -71,7 +71,7 @@
         background
         layout="total, prev, pager, next"
         :current-page="pager.current"
-        :page-size="pager.size"
+        page-size="10"
         :total="pager.total"
         @current-change="handlePageChange"
       ></el-pagination>
@@ -80,6 +80,12 @@
 </template>
 
 <script>
+import {
+  getLecturePage,
+  getLecture,
+  addLecture,
+  modifyLecture,
+} from "@/api/index.js";
 import { ref, reactive, onMounted, toRefs } from "vue";
 export default {
   setup() {
@@ -87,8 +93,7 @@ export default {
       list: [],
       pager: {
         current: 1,
-        size: 5,
-        total: 10,
+        total: 0,
       },
       query: {
         name: "",
@@ -101,36 +106,10 @@ export default {
     });
 
     const init = () => {
-      state.list = [
-        {
-          name: "西湖音乐节",
-          subject: "Music & Life",
-          date: "2021-08-08 08:00:00",
-          address: "西湖文化广场",
-          site: "amazon",
-        },
-        {
-          name: "西湖音乐节",
-          subject: "MUSIC & LIFE",
-          date: "2021-08-08 08:08:08",
-          address: "西湖文化广场",
-          site: "amazon",
-        },
-        {
-          name: "西湖音乐节",
-          subject: "MUSIC & LIFE",
-          date: "2021-08-08 08:08:08",
-          address: "西湖文化广场",
-          site: "amazon",
-        },
-        {
-          name: "西湖音乐节",
-          subject: "MUSIC & LIFE",
-          date: "2021-08-08 08:08:08",
-          address: "西湖文化广场",
-          site: "amazon",
-        },
-      ];
+      getLecturePage(state.query).then((res) => {
+        state.list = res.records;
+        state.pager.total = res.total;
+      });
     };
 
     return {

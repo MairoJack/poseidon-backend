@@ -42,12 +42,13 @@
 import { login } from "@/api/index.js";
 import { ref, reactive, toRefs } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { ElMessage } from "element-plus";
 
 export default {
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
 
     const validateForm = ref(null);
@@ -72,12 +73,11 @@ export default {
 
     const submitForm = async () => {
       await validateForm.value.validate();
-
       state.login = true;
       login(state.loginForm).then((res) => {
         state.login = false;
         store.commit("SET_TOKEN", res);
-        router.push("/");
+        router.push(route.query.redirect || "/");
       });
     };
 
