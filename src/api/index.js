@@ -5,7 +5,7 @@ import request from "@/utils/request";
  */
 export function login(data) {
   return request({
-    url: "/api/users/login",
+    url: "/admin/sys_users/login",
     method: "post",
     data,
   });
@@ -16,7 +16,7 @@ export function login(data) {
  */
 export function getUserInfo() {
   return request({
-    url: "/api/users/info",
+    url: "/admin/sys_users/info",
     method: "get",
   });
 }
@@ -24,11 +24,11 @@ export function getUserInfo() {
 /**
  * 获取活动讲座分页
  */
-export function getLecturePage(param) {
+export function getLecturePage(params) {
   return request({
-    url: "/api/lectures",
+    url: "/admin/lectures",
     method: "get",
-    param
+    params,
   });
 }
 
@@ -37,7 +37,7 @@ export function getLecturePage(param) {
  */
 export function getLecture(id) {
   return request({
-    url: "/api/lectures/" + id,
+    url: "/admin/lectures/" + id,
     method: "get",
   });
 }
@@ -47,9 +47,9 @@ export function getLecture(id) {
  */
 export function addLecture(data) {
   return request({
-    url: "/api/lectures",
+    url: "/admin/lectures",
     method: "post",
-    data
+    data,
   });
 }
 
@@ -58,8 +58,8 @@ export function addLecture(data) {
  */
 export function modifyLecture(data) {
   return request({
-    url: "/api/lectures/" + data.id,
+    url: "/admin/lectures/" + data.id,
     method: "post",
-    data
+    data,
   });
 }

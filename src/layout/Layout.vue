@@ -30,4 +30,8 @@ export default {
   font-size: 24px;
   border-bottom: 1px solid #ccc;
 }
+.el-main {
+  overflow-y: auto;
+  height: calc(100vh - 50px);
+}
 </style>

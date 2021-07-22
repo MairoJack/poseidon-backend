@@ -23,12 +23,11 @@
       >
     </div>
     <el-divider></el-divider>
-    <el-table :data="list">
+    <el-table :data="list" v-loading="loading">
       <el-table-column
         prop="subject"
         label="活动主题"
         show-overflow-tooltip
-        width="180"
         align="center"
       >
       </el-table-column>
@@ -36,11 +35,10 @@
         prop="name"
         label="活动名称"
         show-overflow-tooltip
-        width="180"
         align="center"
       >
       </el-table-column>
-      <el-table-column prop="date" label="活动时间" width="180" align="center">
+      <el-table-column prop="date" label="活动时间" align="center">
       </el-table-column>
       <el-table-column
         prop="address"
@@ -51,7 +49,7 @@
       </el-table-column>
       <el-table-column prop="site" label="站点" align="center">
       </el-table-column>
-      <el-table-column label="操作" width="180" align="center">
+      <el-table-column label="操作" align="center">
         <template #default="scope">
           <router-link class="mr10" :to="'/lecture-edit/' + scope.$index">
             <el-button type="text" icon="el-icon-edit">编辑 </el-button>
@@ -71,7 +69,6 @@
         background
         layout="total, prev, pager, next"
         :current-page="pager.current"
-        page-size="10"
         :total="pager.total"
         @current-change="handlePageChange"
       ></el-pagination>
@@ -80,13 +77,8 @@
 </template>
 
 <script>
-import {
-  getLecturePage,
-  getLecture,
-  addLecture,
-  modifyLecture,
-} from "@/api/index.js";
-import { ref, reactive, onMounted, toRefs } from "vue";
+import { getLecturePage } from "@/api/index.js";
+import { reactive, onMounted, toRefs } from "vue";
 export default {
   setup() {
     const state = reactive({
@@ -99,6 +91,7 @@ export default {
         name: "",
         site: "",
       },
+      loading: false,
     });
 
     onMounted(() => {
@@ -106,14 +99,26 @@ export default {
     });
 
     const init = () => {
+      state.loading = true;
       getLecturePage(state.query).then((res) => {
         state.list = res.records;
         state.pager.total = res.total;
       });
+      state.loading = false;
     };
 
+    const handleSearch = () => {
+      init();
+    };
+
+    const handlePageChange = (val) => {
+      state.current = val;
+      init();
+    };
     return {
       ...toRefs(state),
+      handleSearch,
+      handlePageChange,
     };
   },
 };

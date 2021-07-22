@@ -77,6 +77,7 @@ export default {
 .el-aside {
   height: 100vh;
   transition: all 0.5s;
+  overflow-y: auto;
   background-color: lightblue;
 }
 .el-aside::-webkit-scrollbar {
