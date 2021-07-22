@@ -55,6 +55,7 @@ const routes = [
     name: "活动讲座",
     icon: "el-icon-monitor",
     meta: { title: "活动讲座" },
+    redirect: "/lecture-list",
     children: [
       {
         path: "/lecture-list",

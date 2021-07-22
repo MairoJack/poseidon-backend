@@ -56,10 +56,20 @@ export function addLecture(data) {
 /**
  * 修改活动讲座
  */
-export function modifyLecture(data) {
+export function modifyLecture(id, data) {
   return request({
-    url: "/admin/lectures/" + data.id,
-    method: "post",
+    url: "/admin/lectures/" + id,
+    method: "put",
     data,
+  });
+}
+
+/**
+ * 删除活动讲座
+ */
+export function removeLecture(id) {
+  return request({
+    url: "/admin/lectures/" + id,
+    method: "delete",
   });
 }

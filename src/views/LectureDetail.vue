@@ -28,7 +28,7 @@
         <el-form-item label="站点" prop="site">
           <el-select v-model="dataForm.site" clearable placeholder="请选择站点">
             <el-option label="amazon" value="amazon"></el-option>
-            <el-option label="shoppe" value="shoppe"></el-option>
+            <el-option label="shopee" value="shopee"></el-option>
             <el-option label="lazada" value="lazada"></el-option>
             <el-option label="wish" value="wish"></el-option>
             <el-option label="alibaba" value="alibaba"></el-option>
@@ -80,8 +80,9 @@ export default {
       mainImage: [{ required: true, message: "请选择主图", trigger: "change" }],
     };
 
+    const id = route.params.id;
     onMounted(() => {
-      if (route.params.id) {
+      if (id) {
         //编辑/详情 需要获取数据
         getLecture(route.params.id).then((res) => {
           state.dataForm = Object.assign({}, res);
@@ -92,9 +93,15 @@ export default {
       await validateForm.value.validate();
       state.loading = true;
       try {
-        await addLecture(state.dataForm);
-        ElMessage.success("添加成功");
-        router.back(-1);
+        if (id) {
+          await modifyLecture(id, state.dataForm);
+          ElMessage.success("修改成功");
+          router.back(-1);
+        } else {
+          await addLecture(state.dataForm);
+          ElMessage.success("添加成功");
+          router.replace("/lecture");
+        }
       } finally {
         state.loading = false;
       }

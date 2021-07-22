@@ -13,7 +13,7 @@
         class="handle-select mr10"
       >
         <el-option key="1" label="amazon" value="amazon"></el-option>
-        <el-option key="2" label="shoppe" value="shoppe"></el-option>
+        <el-option key="2" label="shopee" value="shopee"></el-option>
         <el-option key="3" label="lazada" value="lazada"></el-option>
         <el-option key="4" label="wish" value="wish"></el-option>
         <el-option key="5" label="alibaba" value="alibaba"></el-option>
@@ -51,14 +51,15 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template #default="scope">
-          <router-link class="mr10" :to="'/lecture-edit/' + scope.$index">
+          <router-link class="mr10" :to="'/lecture-edit/' + scope.row.id">
             <el-button type="text" icon="el-icon-edit">编辑 </el-button>
           </router-link>
           <el-button
+            :loading="scope.row.btnLoading"
             type="text"
             icon="el-icon-delete"
             class="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+            @click="handleRemove(scope.row, scope.$index)"
             >删除</el-button
           >
         </template>
@@ -77,8 +78,9 @@
 </template>
 
 <script>
-import { getLecturePage } from "@/api/index.js";
+import { getLecturePage, removeLecture } from "@/api/index.js";
 import { reactive, onMounted, toRefs } from "vue";
+import { ElMessageBox } from "element-plus";
 export default {
   setup() {
     const state = reactive({
@@ -92,13 +94,14 @@ export default {
         site: "",
       },
       loading: false,
+      btnLoading: false,
     });
 
     onMounted(() => {
-      init();
+      fetchData();
     });
 
-    const init = () => {
+    const fetchData = () => {
       state.loading = true;
       getLecturePage(state.query).then((res) => {
         state.list = res.records;
@@ -108,17 +111,35 @@ export default {
     };
 
     const handleSearch = () => {
-      init();
+      fetchData();
     };
 
     const handlePageChange = (val) => {
       state.current = val;
-      init();
+      fetchData();
     };
+
+    const handleRemove = async (row, index) => {
+      row.btnLoading = true;
+      try {
+        await ElMessageBox.confirm("确认删除", "确删除吗", {
+          confirmButtonText: "确认",
+          cancelButtonText: "取消",
+          type: "warning",
+        });
+        await removeLecture(row.id);
+        state.list.splice(index, 1);
+        state.pager.total--;
+      } finally {
+        row.btnLoading = false;
+      }
+    };
+
     return {
       ...toRefs(state),
       handleSearch,
       handlePageChange,
+      handleRemove,
     };
   },
 };
